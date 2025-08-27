@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Auth;
+namespace Modules\Auth\app\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;

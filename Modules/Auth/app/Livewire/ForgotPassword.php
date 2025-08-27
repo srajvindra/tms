@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Auth;
+namespace Modules\Auth\app\Livewire;
 
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
