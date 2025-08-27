@@ -4,6 +4,7 @@ namespace Modules\Auth\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -26,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerLivewireComponents();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
@@ -150,5 +152,18 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Register Livewire components.
+     */
+    protected function registerLivewireComponents(): void
+    {
+        Livewire::component('auth.login', \Modules\Auth\Livewire\Login::class);
+        Livewire::component('auth.register', \Modules\Auth\Livewire\Register::class);
+        Livewire::component('auth.confirm-password', \Modules\Auth\Livewire\ConfirmPassword::class);
+        Livewire::component('auth.forgot-password', \Modules\Auth\Livewire\ForgotPassword::class);
+        Livewire::component('auth.reset-password', \Modules\Auth\Livewire\ResetPassword::class);
+        Livewire::component('auth.verify-email', \Modules\Auth\Livewire\VerifyEmail::class);
     }
 }

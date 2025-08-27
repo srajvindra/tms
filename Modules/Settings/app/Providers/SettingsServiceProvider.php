@@ -4,6 +4,7 @@ namespace Modules\Settings\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -26,6 +27,7 @@ class SettingsServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerLivewireComponents();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
@@ -150,5 +152,16 @@ class SettingsServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Register Livewire components.
+     */
+    protected function registerLivewireComponents(): void
+    {
+        Livewire::component('settings.profile', \Modules\Settings\Livewire\Profile::class);
+        Livewire::component('settings.password', \Modules\Settings\Livewire\Password::class);
+        Livewire::component('settings.appearance', \Modules\Settings\Livewire\Appearance::class);
+        Livewire::component('settings.delete-user-form', \Modules\Settings\Livewire\DeleteUserForm::class);
     }
 }
