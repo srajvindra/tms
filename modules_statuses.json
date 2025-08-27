@@ -1,4 +1,5 @@
 {
     "Tasks": true,
-    "Auth": true
+    "Auth": true,
+    "Settings": true
 }

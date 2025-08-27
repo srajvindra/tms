@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\Providers;
+namespace Modules\Settings\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -8,13 +8,13 @@ use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class AuthServiceProvider extends ServiceProvider
+class SettingsServiceProvider extends ServiceProvider
 {
     use PathNamespace;
 
-    protected string $name = 'Auth';
+    protected string $name = 'Settings';
 
-    protected string $nameLower = 'auth';
+    protected string $nameLower = 'settings';
 
     /**
      * Boot the application events.

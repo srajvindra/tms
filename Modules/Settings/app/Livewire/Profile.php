@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Settings;
+namespace Modules\Settings\Livewire;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;

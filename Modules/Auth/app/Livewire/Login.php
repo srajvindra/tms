@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\app\Livewire;
+namespace Modules\Auth\Livewire;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
@@ -73,5 +73,10 @@ class Login extends Component
     protected function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+    }
+
+    public function render()
+    {
+        return view('auth::livewire.login');
     }
 }

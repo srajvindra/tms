@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\app\Livewire;
+namespace Modules\Auth\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -33,5 +33,10 @@ class ConfirmPassword extends Component
         session(['auth.password_confirmed_at' => time()]);
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+    }
+
+    public function render()
+    {
+        return view('auth::livewire.confirm-password');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\app\Livewire;
+namespace Modules\Auth\Livewire;
 
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
@@ -23,5 +23,10 @@ class ForgotPassword extends Component
         Password::sendResetLink($this->only('email'));
 
         session()->flash('status', __('A reset link will be sent if the account exists.'));
+    }
+
+    public function render()
+    {
+        return view('auth::livewire.forgot-password');
     }
 }

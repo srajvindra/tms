@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
-use Modules\Auth\app\Livewire\ConfirmPassword;
-use Modules\Auth\app\Livewire\ForgotPassword;
-use Modules\Auth\app\Livewire\Login;
-use Modules\Auth\app\Livewire\Register;
-use Modules\Auth\app\Livewire\ResetPassword;
-use Modules\Auth\app\Livewire\VerifyEmail;
+use Modules\Auth\Livewire\ConfirmPassword;
+use Modules\Auth\Livewire\ForgotPassword;
+use Modules\Auth\Livewire\Login;
+use Modules\Auth\Livewire\Register;
+use Modules\Auth\Livewire\ResetPassword;
+use Modules\Auth\Livewire\VerifyEmail;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
