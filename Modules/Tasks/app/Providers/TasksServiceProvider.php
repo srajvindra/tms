@@ -4,6 +4,7 @@ namespace Modules\Tasks\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -26,6 +27,7 @@ class TasksServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerLivewireComponents();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
     }
 
@@ -151,5 +153,15 @@ class TasksServiceProvider extends ServiceProvider
         }
 
         return $paths;
+    }
+
+    /**
+     * Register Livewire components.
+     */
+    protected function registerLivewireComponents(): void
+    {
+        // Register with proper Livewire component names and correct namespaces
+        Livewire::component('tasks.tasks-list', \Modules\Tasks\Livewire\TasksList::class);
+        Livewire::component('tasks.tasks-create', \Modules\Tasks\Livewire\TasksCreate::class);
     }
 }
