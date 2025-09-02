@@ -4,17 +4,24 @@ namespace Modules\Tasks\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Modules\Tasks\Models\Task;
+use Illuminate\Support\Facades\Validator;
 
 class TasksList extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public $search = '';
     public $status_filter = '';
     public $priority_filter = '';
     public $category_filter = '';
     public $per_page = 10;
+    
+    public $csvFile;
+    public $showImportModal = false;
+
+    protected $listeners = ['import-modal-open' => 'openImportModal'];
 
     protected $queryString = [
         'search' => ['except' => ''],
