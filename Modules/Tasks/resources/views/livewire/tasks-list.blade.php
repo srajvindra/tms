@@ -163,4 +163,49 @@
             </div>
         @endif
     </div>
+
+    <!-- Import CSV Modal -->
+    @if($showImportModal)
+        <flux:modal name="import-csv-modal" wire:model="showImportModal" class="space-y-6">
+            <div>
+                <flux:heading size="lg">Import Tasks from CSV</flux:heading>
+                <flux:text class="mt-2">Upload a CSV file to import multiple tasks at once.</flux:text>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <flux:text size="sm" class="mb-2 font-medium">CSV Format:</flux:text>
+                    <flux:text size="sm" class="text-gray-600">
+                        The CSV should have columns in this order:<br>
+                        <code class="bg-gray-100 px-1 rounded text-xs">what, source, action, type, category, category_ii, priority, comments, status, is_recurring, recurring_type</code>
+                    </flux:text>
+                </div>
+
+                <div>
+                    <flux:field>
+                        <flux:label>Select CSV File</flux:label>
+                        <flux:input type="file" wire:model="csvFile" accept=".csv,.txt" />
+                        <flux:error name="csvFile" />
+                    </flux:field>
+                </div>
+
+                @if ($csvFile)
+                    <div class="flex items-center space-x-2 text-sm text-green-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>File selected: {{ $csvFile->getClientOriginalName() }}</span>
+                    </div>
+                @endif
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <flux:button variant="ghost" wire:click="closeImportModal">Cancel</flux:button>
+                <flux:button wire:click="importCsv" :disabled="!$csvFile" wire:loading.attr="disabled">
+                    <span wire:loading.remove>Import Tasks</span>
+                    <span wire:loading>Importing...</span>
+                </flux:button>
+            </div>
+        </flux:modal>
+    @endif
 </div>

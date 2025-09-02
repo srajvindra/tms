@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center">
             <flux:heading size="lg">All Tasks</flux:heading>
             <div class="flex gap-3">
-                <flux:button variant="ghost" wire:click="$dispatch('import-modal-open')">
+                <flux:button variant="ghost" @click="$dispatch('import-modal-open')">
                     Import CSV
                 </flux:button>
                 <flux:button :href="route('tasks.create')" wire:navigate>
