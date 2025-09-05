@@ -4,7 +4,7 @@
             <flux:heading size="lg">All Tasks</flux:heading>
             <div class="flex gap-3">
                 <flux:button variant="ghost" @click="$dispatch('import-modal-open')">
-                    Import CSV
+                    Import XLS
                 </flux:button>
                 <flux:button :href="route('tasks.create')" wire:navigate>
                     Create New Task

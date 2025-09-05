@@ -163,5 +163,6 @@ class TasksServiceProvider extends ServiceProvider
         // Register with proper Livewire component names and correct namespaces
         Livewire::component('tasks.tasks-list', \Modules\Tasks\Livewire\TasksList::class);
         Livewire::component('tasks.tasks-create', \Modules\Tasks\Livewire\TasksCreate::class);
+        Livewire::component('tasks.tasks-edit', \Modules\Tasks\Livewire\TasksEdit::class);
     }
 }

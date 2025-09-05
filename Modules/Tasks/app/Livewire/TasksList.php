@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Modules\Tasks\Models\Task;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TasksList extends Component
 {
@@ -18,7 +19,7 @@ class TasksList extends Component
     public $category_filter = '';
     public $per_page = 10;
     
-    public $csvFile;
+    public $xlsFile;
     public $showImportModal = false;
 
     protected $listeners = ['import-modal-open' => 'openImportModal'];
@@ -104,57 +105,69 @@ class TasksList extends Component
     public function closeImportModal(): void
     {
         $this->showImportModal = false;
-        $this->csvFile = null;
+        $this->xlsFile = null;
     }
 
-    public function importCsv(): void
+    public function importXls(): void
     {
         $this->validate([
-            'csvFile' => 'required|file|mimes:csv,txt|max:2048',
+            'xlsFile' => 'required|file|mimes:xls,xlsx|max:5120',
         ]);
-        
-        dump($this->csvFile);
 
-        $path = $this->csvFile->getRealPath();
-        $csv = array_map('str_getcsv', file($path));
-        
-        // Remove header row if exists
-        $header = array_shift($csv);
-        
         $imported = 0;
         $skipped = 0;
         
-        foreach ($csv as $row) {
-            if (count($row) < 3) {
-                $skipped++;
-                continue;
+        try {
+            $data = Excel::toArray([], $this->xlsFile);
+            
+            if (empty($data) || empty($data[0])) {
+                session()->flash('error', 'The Excel file appears to be empty or invalid.');
+                return;
             }
             
-            try {
-                Task::create([
-                    'what' => $row[0] ?? '',
-                    'source' => $row[1] ?? '',
-                    'action' => $row[2] ?? '',
-                    'type' => $row[3] ?? 'task',
-                    'category' => $row[4] ?? 'general',
-                    'category_ii' => $row[5] ?? null,
-                    'priority' => in_array(strtolower($row[6] ?? ''), ['low', 'medium', 'high', 'urgent']) 
-                        ? strtolower($row[6]) 
-                        : 'medium',
-                    'comments' => $row[7] ?? '',
-                    'status' => in_array(strtolower($row[8] ?? ''), ['pending', 'in_progress', 'completed', 'cancelled', 'on_hold']) 
-                        ? strtolower($row[8]) 
-                        : 'pending',
-                    'is_recurring' => filter_var($row[9] ?? false, FILTER_VALIDATE_BOOLEAN),
-                    'recurring_type' => $row[10] ?? null,
-                ]);
-                $imported++;
-            } catch (\Exception $e) {
-                $skipped++;
+            $rows = $data[0]; // Get first sheet
+            
+            // Remove header row if it exists (check if first row contains column names)
+            if (!empty($rows) && is_string($rows[0][0] ?? null) && 
+                in_array(strtolower($rows[0][0]), ['what', 'task', 'description'])) {
+                array_shift($rows);
             }
+            
+            foreach ($rows as $row) {
+                if (count($row) < 3 || empty(trim($row[0] ?? ''))) {
+                    $skipped++;
+                    continue;
+                }
+                
+                try {
+                    Task::create([
+                        'what' => trim($row[0] ?? ''),
+                        'source' => trim($row[1] ?? ''),
+                        'action' => trim($row[2] ?? ''),
+                        'type' => trim($row[3] ?? 'task'),
+                        'category' => trim($row[4] ?? 'general'),
+                        'category_ii' => trim($row[5] ?? '') ?: null,
+                        'priority' => in_array(strtolower(trim($row[6] ?? '')), ['low', 'medium', 'high', 'urgent']) 
+                            ? strtolower(trim($row[6])) 
+                            : 'medium',
+                        'comments' => trim($row[7] ?? ''),
+                        'status' => in_array(strtolower(trim($row[8] ?? '')), ['pending', 'in_progress', 'completed', 'cancelled', 'on_hold']) 
+                            ? strtolower(trim($row[8])) 
+                            : 'pending',
+                        'is_recurring' => filter_var($row[9] ?? false, FILTER_VALIDATE_BOOLEAN),
+                        'recurring_type' => trim($row[10] ?? '') ?: null,
+                    ]);
+                    $imported++;
+                } catch (\Exception $e) {
+                    $skipped++;
+                }
+            }
+            
+            session()->flash('message', "Successfully imported {$imported} tasks. {$skipped} rows were skipped.");
+            
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error processing Excel file: ' . $e->getMessage());
         }
-        
-        session()->flash('message', "Successfully imported {$imported} tasks. {$skipped} rows were skipped.");
         
         $this->closeImportModal();
         $this->resetPage();
