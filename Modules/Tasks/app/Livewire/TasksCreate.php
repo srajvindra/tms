@@ -25,8 +25,8 @@ class TasksCreate extends Component
             'what' => 'required|string|max:65535',
             'source' => 'required|string|max:255',
             'action' => 'required|string|max:255'
-            'type' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
+            'type' => 'required|string|max:255'
+            'category' => 'required|string|max:255'
             'category_ii' => 'nullable|string|max:255',
             'priority' => 'required|in:low,medium,high,urgent',
             'comments' => 'nullable|string|max:65535',
@@ -62,7 +62,7 @@ class TasksCreate extends Component
 
     public function updated($propertyName): void
     {
-        $this->validateOnly($propertyName);
+        $this->validateOnly($propertyName)
     }
 
     public function create(): void
