@@ -1,8 +1,8 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
+use Modules\Settings\Livewire\Appearance;
+use Modules\Settings\Livewire\Password;
+use Modules\Settings\Livewire\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
