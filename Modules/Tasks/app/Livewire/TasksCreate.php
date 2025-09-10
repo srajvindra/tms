@@ -24,13 +24,13 @@ class TasksCreate extends Component
         return [
             'what' => 'required|string|max:65535',
             'source' => 'required|string|max:255',
-            'action' => 'required|string|max:255'
+            'action' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'category' => 'required|string|max:255',
             'category_ii' => 'nullable|string|max:255',
             'priority' => 'required|in:low,medium,high,urgent',
             'comments' => 'nullable|string|max:65535',
-            'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold'
+            'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold',
             'is_recurring' => 'boolean',
             'recurring_type' => 'nullable|string|max:255',
         ];
