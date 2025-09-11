@@ -8,15 +8,25 @@ use Modules\Tasks\Models\Task;
 class TasksCreate extends Component
 {
     public $what = '';
+
     public $source = '';
+
     public $action = '';
+
     public $type = '';
+
     public $category = '';
+
     public $category_ii = '';
+
     public $priority = 'medium';
+
     public $comments = '';
+
     public $status = 'pending';
+
     public $is_recurring = false;
+
     public $recurring_type = '';
 
     protected function rules(): array
@@ -24,13 +34,13 @@ class TasksCreate extends Component
         return [
             'what' => 'required|string|max:65535',
             'source' => 'required|string|max:255',
-            'action' => 'required|string|max:255'
-            'type' => 'required|string|max:255'
-            'category' => 'required|string|max:255'
+            'action' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
             'category_ii' => 'nullable|string|max:255',
             'priority' => 'required|in:low,medium,high,urgent',
             'comments' => 'nullable|string|max:65535',
-            'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold'
+            'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold',
             'is_recurring' => 'boolean',
             'recurring_type' => 'nullable|string|max:255',
         ];
@@ -62,19 +72,20 @@ class TasksCreate extends Component
 
     public function updated($propertyName): void
     {
-        $this->validateOnly($propertyName)
+        $this->validateOnly($propertyName);
     }
 
     public function create(): void
     {
         $this->validate();
-        
+
         // Additional validation for recurring tasks
         if ($this->is_recurring && empty($this->recurring_type)) {
             $this->addError('recurring_type', 'The recurring type is required when task is set as recurring.');
+
             return;
         }
-        
+
         Task::create([
             'what' => $this->what,
             'source' => $this->source,
@@ -88,9 +99,9 @@ class TasksCreate extends Component
             'is_recurring' => $this->is_recurring,
             'recurring_type' => $this->recurring_type,
         ]);
-        
+
         session()->flash('message', 'Task created successfully!');
-        
+
         // Reset form
         $this->reset();
         $this->priority = 'medium';
