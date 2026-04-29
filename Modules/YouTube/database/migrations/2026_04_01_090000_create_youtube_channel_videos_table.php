@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('youtube_channel_videos', function (Blueprint $table) {
+            $table->id();
+            $table->string('channel_id')->index();
+            $table->string('video_id')->unique();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->timestamp('published_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('youtube_channel_videos');
+    }
+};
