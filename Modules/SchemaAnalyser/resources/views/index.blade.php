@@ -18,7 +18,11 @@ if (typeof vis === 'undefined') {
   header h1 { font-size: 16px; margin: 0; font-weight: 600; }
   header .meta { margin-left: 16px; color: #94a3b8; font-size: 12px; }
   header .legend { margin-left: auto; display: flex; gap: 14px; align-items: center; font-size: 12px; color: #94a3b8; }
+  header .legend > span { cursor: pointer; transition: color 0.15s; user-select: none; }
+  header .legend > span:hover { color: #e2e8f0; }
   header .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  @keyframes group-flash { 0% { background: rgba(99,102,241,0.55); } 100% { background: transparent; } }
+  #sidebar .group-title.flash { animation: group-flash 1.2s ease-out; }
 
   #sidebar { background: #1e293b; border-right: 1px solid #334155; overflow-y: auto; padding: 12px; }
   #sidebar input { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 13px; outline: none; margin-bottom: 10px; }
@@ -29,6 +33,10 @@ if (typeof vis === 'undefined') {
   #sidebar .group-title.active { background: rgba(99,102,241,0.2); color: #a5b4fc; }
   #sidebar .group-title .swatch { width: 10px; height: 10px; border-radius: 2px; }
   #sidebar .group-title .hint { margin-left: auto; font-size: 9px; color: #475569; text-transform: none; letter-spacing: 0; }
+  #sidebar .group-title .caret { font-size: 10px; color: #64748b; padding: 2px 6px; border-radius: 3px; transition: transform 0.15s, background 0.1s; line-height: 1; }
+  #sidebar .group-title .caret:hover { background: #475569; color: #e2e8f0; }
+  #sidebar .group.collapsed .group-title .caret { transform: rotate(-90deg); }
+  #sidebar .group.collapsed .table-item { display: none; }
   #sidebar .table-item { padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; transition: background 0.1s; }
   #sidebar .table-item:hover { background: #334155; color: #fff; }
   #sidebar .table-item.active { background: #6366f1; color: #fff; }
@@ -69,7 +77,7 @@ if (typeof vis === 'undefined') {
 <div id="app">
   <header>
     <h1>🗄️ B2B Database Schema</h1>
-    <span class="meta">{{ $databaseName }} ({{ $connectionName }}) · {{ count($schema) }} tables</span>
+    <span class="meta">{{ $databaseName }} ({{ $connectionName }}) · {{ count($schema) }} tables{{ $smartMode ? ' · smart' : '' }}</span>
     <div class="legend" id="legend"></div>
   </header>
 
@@ -85,6 +93,7 @@ if (typeof vis === 'undefined') {
       <button id="reset">Reset</button>
       <button id="toggle-outlines">Hide Outlines</button>
       <button id="toggle-physics">Toggle Physics</button>
+      <button id="toggle-group-drag" title="When on, dragging any table moves its whole category. Hold Shift to drag a group without toggling.">Group Drag: Off</button>
     </div>
     <div id="loading">Loading graph…</div>
     <div id="network"></div>
@@ -126,9 +135,26 @@ Object.values(SCHEMA).forEach(t => colorForCategory(t.cat || 'other'));
   const el = document.getElementById('legend');
   el.innerHTML = [...used].sort().map(cat => {
     const c = colorForCategory(cat);
-    return `<span><span class="dot" style="background:${c.bg}"></span>${c.label}</span>`;
+    return `<span data-cat="${cat}" title="Jump to ${c.label} in sidebar"><span class="dot" style="background:${c.bg}"></span>${c.label}</span>`;
   }).join('');
+  el.querySelectorAll('span[data-cat]').forEach(node => {
+    node.onclick = () => scrollSidebarToCategory(node.dataset.cat);
+  });
 })();
+
+function scrollSidebarToCategory(cat) {
+  const search = document.getElementById('search');
+  if (search.value) {
+    search.value = '';
+    buildSidebar('');
+  }
+  const target = document.querySelector(`#sidebar .group-title[data-cat="${cat}"]`);
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  target.classList.remove('flash');
+  void target.offsetWidth;
+  target.classList.add('flash');
+}
 
 // ============== BUILD GRAPH ==============
 const tableNames = Object.keys(SCHEMA);
@@ -218,12 +244,16 @@ function buildSidebar(filter = '') {
   Object.keys(groups).sort().forEach(cat => {
     const c = colorForCategory(cat);
     const div = document.createElement('div');
-    div.className = 'group';
+    div.className = 'group' + (collapsedGroups.has(cat) ? ' collapsed' : '');
     const title = document.createElement('div');
     title.className = 'group-title' + (selectedGroup === cat ? ' active' : '');
     title.dataset.cat = cat;
-    title.innerHTML = `<span class="swatch" style="background:${c.bg}"></span>${c.label} (${groups[cat].length})<span class="hint">click to select</span>`;
+    title.innerHTML = `<span class="swatch" style="background:${c.bg}"></span>${c.label} (${groups[cat].length})<span class="hint">click to select</span><span class="caret" title="Toggle section">▾</span>`;
     title.onclick = () => toggleGroupSelection(cat);
+    title.querySelector('.caret').onclick = (e) => {
+      e.stopPropagation();
+      toggleGroupCollapse(cat);
+    };
     div.appendChild(title);
     groups[cat].sort().forEach(name => {
       const item = document.createElement('div');
@@ -295,6 +325,21 @@ function buildDetails(name) {
 // ============== GROUP OUTLINES ==============
 let selectedGroup = null;
 let outlinesVisible = true;
+let groupDragMode = false;
+let shiftHeld = false;
+const collapsedGroups = new Set();
+
+window.addEventListener('keydown', (e) => { if (e.key === 'Shift') { shiftHeld = true; } });
+window.addEventListener('keyup', (e) => { if (e.key === 'Shift') { shiftHeld = false; } });
+window.addEventListener('blur', () => { shiftHeld = false; });
+
+function toggleGroupCollapse(cat) {
+  if (collapsedGroups.has(cat)) collapsedGroups.delete(cat);
+  else collapsedGroups.add(cat);
+  buildSidebar(document.getElementById('search').value);
+  applyGroupVisibility();
+  network.redraw();
+}
 const tablesByCat = {};
 tableNames.forEach(n => {
   const cat = SCHEMA[n].cat || 'other';
@@ -350,6 +395,7 @@ function drawGroupOutlines(ctx) {
   const positions = network.getPositions();
   Object.entries(tablesByCat).forEach(([cat, names]) => {
     if (selectedGroup && selectedGroup !== cat) return;
+    if (collapsedGroups.has(cat)) return;
     const pts = names.map(n => positions[n]).filter(Boolean);
     if (pts.length < 2) return;
     const c = colorForCategory(cat);
@@ -387,19 +433,21 @@ function drawGroupOutlines(ctx) {
 }
 
 function applyGroupVisibility() {
-  if (selectedGroup) {
-    const memberSet = new Set(tablesByCat[selectedGroup]);
-    data.nodes.update(nodes.map(n => ({ id: n.id, hidden: !memberSet.has(n.id), opacity: 1.0 })));
-    data.edges.update(edges.map(e => ({
-      id: e.id,
-      hidden: !(memberSet.has(e.from) && memberSet.has(e.to)),
-      color: { color: '#475569' },
-      width: 1,
-    })));
-  } else {
-    data.nodes.update(nodes.map(n => ({ id: n.id, hidden: false, opacity: 1.0 })));
-    data.edges.update(edges.map(e => ({ id: e.id, hidden: false, color: { color: '#475569' }, width: 1 })));
-  }
+  const isCollapsed = (id) => collapsedGroups.has(SCHEMA[id]?.cat || 'other');
+  const memberSet = selectedGroup ? new Set(tablesByCat[selectedGroup]) : null;
+
+  data.nodes.update(nodes.map(n => ({
+    id: n.id,
+    hidden: isCollapsed(n.id) || (memberSet !== null && !memberSet.has(n.id)),
+    opacity: 1.0,
+  })));
+  data.edges.update(edges.map(e => ({
+    id: e.id,
+    hidden: isCollapsed(e.from) || isCollapsed(e.to)
+      || (memberSet !== null && !(memberSet.has(e.from) && memberSet.has(e.to))),
+    color: { color: '#475569' },
+    width: 1,
+  })));
 }
 
 function toggleGroupSelection(cat) {
@@ -495,17 +543,30 @@ network.on('click', (params) => {
   }
 });
 
-// Keep group multi-selection while dragging: re-select the group on dragStart
-// so vis-network drags all member nodes together
-network.on('dragStart', (params) => {
-  if (selectedGroup && params.nodes.length === 1) {
-    const draggedId = params.nodes[0];
-    if (tablesByCat[selectedGroup].includes(draggedId)) {
-      // Ensure all group nodes are selected so vis-network drags them together
-      network.selectNodes(tablesByCat[selectedGroup], false);
+// Pre-select the entire group on pointerdown (capture phase) so vis-network's
+// drag handler picks up all members as the drag set. Triggers:
+//   1. Sidebar group isolation (selectedGroup)
+//   2. Group Drag toggle button (groupDragMode)
+//   3. Shift held while dragging
+container.addEventListener('pointerdown', (e) => {
+  if (e.button !== 0) { return; }
+  const rect = container.getBoundingClientRect();
+  const nodeId = network.getNodeAt({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  if (!nodeId) { return; }
+
+  if (selectedGroup && tablesByCat[selectedGroup].includes(nodeId)) {
+    network.selectNodes(tablesByCat[selectedGroup], false);
+    return;
+  }
+
+  if (groupDragMode || shiftHeld) {
+    const cat = SCHEMA[nodeId]?.cat || 'other';
+    const members = tablesByCat[cat];
+    if (members && members.length > 1) {
+      network.selectNodes(members, false);
     }
   }
-});
+}, true);
 
 // ============== CONTROLS ==============
 let physicsOn = true;
@@ -530,6 +591,14 @@ document.getElementById('toggle-outlines').onclick = () => {
   outlinesVisible = !outlinesVisible;
   document.getElementById('toggle-outlines').textContent = outlinesVisible ? 'Hide Outlines' : 'Show Outlines';
   network.redraw();
+};
+document.getElementById('toggle-group-drag').onclick = () => {
+  groupDragMode = !groupDragMode;
+  const btn = document.getElementById('toggle-group-drag');
+  btn.textContent = `Group Drag: ${groupDragMode ? 'On' : 'Off'}`;
+  btn.style.background = groupDragMode ? '#6366f1' : '';
+  btn.style.borderColor = groupDragMode ? '#818cf8' : '';
+  btn.style.color = groupDragMode ? '#fff' : '';
 };
 
 network.once('stabilizationIterationsDone', () => {

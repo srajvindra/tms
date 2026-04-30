@@ -17,8 +17,9 @@ class SchemaAnalyserController extends Controller
         $requestedDatabase = $request->query('database');
 
         $connection = $this->resolveConnection($requestedConnection, $requestedDatabase);
-        $schema = $inspector->inspect($connection);
-
+        $smart = $request->boolean('smart');
+        $schema = $inspector->inspect($connection, $smart);
+        
         $displayConnection = $requestedConnection ?? config('database.default');
 
         return view('schemaanalyser::index', [
@@ -26,6 +27,7 @@ class SchemaAnalyserController extends Controller
             'connectionName' => $displayConnection,
             'databaseName' => DB::connection($connection)->getDatabaseName(),
             'availableConnections' => array_keys(config('database.connections', [])),
+            'smartMode' => $smart,
         ]);
     }
 
