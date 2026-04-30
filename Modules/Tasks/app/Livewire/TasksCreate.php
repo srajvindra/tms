@@ -8,15 +8,25 @@ use Modules\Tasks\Models\Task;
 class TasksCreate extends Component
 {
     public $what = '';
+
     public $source = '';
+
     public $action = '';
+
     public $type = '';
+
     public $category = '';
+
     public $category_ii = '';
+
     public $priority = 'medium';
+
     public $comments = '';
+
     public $status = 'pending';
+
     public $is_recurring = false;
+
     public $recurring_type = '';
 
     protected function rules(): array
@@ -68,13 +78,14 @@ class TasksCreate extends Component
     public function create(): void
     {
         $this->validate();
-        
+
         // Additional validation for recurring tasks
         if ($this->is_recurring && empty($this->recurring_type)) {
             $this->addError('recurring_type', 'The recurring type is required when task is set as recurring.');
+
             return;
         }
-        
+
         Task::create([
             'what' => $this->what,
             'source' => $this->source,
@@ -88,9 +99,9 @@ class TasksCreate extends Component
             'is_recurring' => $this->is_recurring,
             'recurring_type' => $this->recurring_type,
         ]);
-        
+
         session()->flash('message', 'Task created successfully!');
-        
+
         // Reset form
         $this->reset();
         $this->priority = 'medium';
