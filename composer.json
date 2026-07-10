@@ -41,7 +41,10 @@
             "Modules\\YouTube\\": "Modules/YouTube/app/",
             "Modules\\News\\": "Modules/News/app/",
             "Modules\\Asana\\": "Modules/Asana/app/",
-            "Modules\\SchemaAnalyser\\": "Modules/SchemaAnalyser/app/"
+            "Modules\\SchemaAnalyser\\": "Modules/SchemaAnalyser/app/",
+            "Modules\\GDocs\\": "Modules/GDocs/app/",
+            "Modules\\DataAnalyser\\": "Modules/DataAnalyser/app/",
+            "Modules\\DataAnalyser\\Database\\Seeders\\": "Modules/DataAnalyser/database/seeders/"
         }
     },
     "autoload-dev": {

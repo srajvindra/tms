@@ -1,0 +1,33 @@
+# One Google Docs link per line. Lines starting with # are ignored.
+# Example:
+# https://docs.google.com/document/d/1aBcDeFGhIjKlMnOpQrStUvWxYz0123456789/edit
+
+
+
+https://docs.google.com/document/d/1vcHeEfWrKZZt0bN0Jqo0FXyYJ-rwsuR6xMZUEfTjhhw/edit
+https://docs.google.com/document/d/10_rK2RJBpPvZT8o1P6c6CB-XEvpwqzi94TQYfDx5AV0/edit
+https://docs.google.com/document/d/1b4dsgO_e8RT1uHoXhsQVoLeS7X0xhIUJgI_U9VjHWAM/edit
+https://docs.google.com/document/d/1ISfiiOG-ncsIZmIZylJmEDSM3ojVrMzk3DAivezBlLg/edit
+https://docs.google.com/document/d/19DzUy4zDuXDr4QN-Q8VpZ467dIfCvNDIwxzmEDzRKv0/edit
+https://docs.google.com/document/d/10qu-Gzw5qwrr2_IeXZ1WM9BfT0cmy_hgPE_wsh-Uq5I/edit
+https://docs.google.com/document/d/1tqLDWjzgqzq60YIYvSWO_r1njWGd2MG3Ytmhxd6ix1I/edit
+https://docs.google.com/document/d/1O5x8Q3stsDupjcNX3MYqH3swJIiovaa66ZskuTOtkFA/edit
+https://docs.google.com/document/d/1W936dzjJFFOe1ZC4HthcIGhaWbn9aObn6p0v-k6cy-A/edit
+https://docs.google.com/document/d/1EPKur6_70_lKbQ5Mawk8xRI3EBCg6HvBxya0e8_7-hg/edit
+https://docs.google.com/document/d/1LyT4ZVEsNthqSY9BqYlArXnglGTraqWGjH_-hwENdQI/edit
+https://docs.google.com/document/d/1oVJguGYiUJSt4_64yY_eyCdoCVO-yz36LuSleyYvMoU/edit
+https://docs.google.com/document/d/1Unve-UxvOw06UUF8i-PlSCs0yfZ-gEEcq0AzYmv-BH0/edit
+https://docs.google.com/document/d/1OoN6NpT9vnTc6HYl_tL83jsGzsKSjCHjGmQhrTetCWE/edit
+https://docs.google.com/document/d/1VJTbYBNK8jBO2UojPeINOpC3r9KgrQ8DgS-2Lgy4L90/edit
+https://docs.google.com/document/d/1fXLdbnqSjlLq9DPDNAtsgTWGNI_x_XeSwgnwsUymg2E/edit
+https://docs.google.com/document/d/1wfJJJZptKooEHVkhzhajEKGuinKrY7IgKjD-dG-a8eo/edit
+https://docs.google.com/document/d/1-7UdUxvcVpMszt15aJAH6YvSCFn81iEmyRA2pWz6suY/edit
+https://docs.google.com/document/d/1kmHcpu75jW-FTZcM33kFdUN6mU48oSIG3d1Y-1aCk4w/edit
+https://docs.google.com/document/d/1duZZ9C3qGUF8wWaoJWOOzhVmsp6aQsWUKK38OrlGt3Y/edit
+https://docs.google.com/document/d/1fwVw1L0c6Nni5wLkgrHQ2X5ue0zwTrnWIA_bJYihCCU/edit
+https://docs.google.com/document/d/1VO38IAeOAER64NNfGaolCB4DJwIA5xmK2af1eJM5IIA/edit
+https://docs.google.com/document/d/1boOthta5nWHpjpcsgTiufMtMYuANAjfdnmfmSU5tvX4/edit
+https://docs.google.com/document/d/1s8WBBGj-xNPQ9EPAiigsiJAyM_W_UEcciS0cek06qxU/edit
+https://docs.google.com/document/d/1edeZh511NzZrmtEgWLvNQLS1HMJv_KKTL7a-rqKeXxE/edit
+https://docs.google.com/document/d/16RRIwv2iTTwELVDHYRiOQ5_9jdXaKk-R1VZJysxShAw/edit
+https://docs.google.com/document/d/137zvhtBkro08H1nLwx9qJIp237I6pKpLvurB7dXSgLo/edit

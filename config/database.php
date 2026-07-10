@@ -62,6 +62,26 @@ return [
             ]) : [],
         ],
 
+        'b2b_schema' => [
+            'driver' => 'mysql',
+            'url' => env('B2B_DB_URL'),
+            'host' => env('B2B_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('B2B_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('B2B_DB_DATABASE', 'b2b_schema'),
+            'username' => env('B2B_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('B2B_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('B2B_DB_SOCKET', ''),
+            'charset' => env('B2B_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('B2B_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

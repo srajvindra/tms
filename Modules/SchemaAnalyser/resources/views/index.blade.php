@@ -27,6 +27,10 @@ if (typeof vis === 'undefined') {
   #sidebar { background: #1e293b; border-right: 1px solid #334155; overflow-y: auto; padding: 12px; }
   #sidebar input { width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 13px; outline: none; margin-bottom: 10px; }
   #sidebar input:focus { border-color: #6366f1; }
+  #sidebar #toggle-all-groups { width: 100%; padding: 6px 10px; margin-bottom: 10px; background: #0f172a; color: #cbd5e1; border: 1px solid #334155; border-radius: 6px; font-size: 12px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 6px; user-select: none; }
+  #sidebar #toggle-all-groups:hover { background: #334155; color: #fff; }
+  #sidebar #toggle-all-groups .caret { display: inline-block; font-size: 10px; transition: transform 0.15s; }
+  #sidebar #toggle-all-groups.collapsed .caret { transform: rotate(-90deg); }
   #sidebar .group { margin-bottom: 14px; }
   #sidebar .group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px; padding: 4px 8px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 6px; user-select: none; }
   #sidebar .group-title:hover { background: #334155; color: #cbd5e1; }
@@ -83,6 +87,7 @@ if (typeof vis === 'undefined') {
 
   <aside id="sidebar" class="scroll-hidden">
     <input type="text" id="search" placeholder="Search tables…" autocomplete="off" />
+    <button id="toggle-all-groups" type="button" title="Expand or collapse all categories"><span class="caret">▾</span><span class="label">Collapse all</span></button>
     <div id="table-list"></div>
   </aside>
 
@@ -345,6 +350,31 @@ tableNames.forEach(n => {
   const cat = SCHEMA[n].cat || 'other';
   (tablesByCat[cat] = tablesByCat[cat] || []).push(n);
 });
+
+function updateToggleAllLabel() {
+  const btn = document.getElementById('toggle-all-groups');
+  if (!btn) return;
+  const allCats = Object.keys(tablesByCat);
+  const allCollapsed = allCats.length > 0 && allCats.every(c => collapsedGroups.has(c));
+  btn.classList.toggle('collapsed', allCollapsed);
+  btn.querySelector('.label').textContent = allCollapsed ? 'Expand all' : 'Collapse all';
+}
+
+document.getElementById('toggle-all-groups').addEventListener('click', () => {
+  const allCats = Object.keys(tablesByCat);
+  const allCollapsed = allCats.every(c => collapsedGroups.has(c));
+  if (allCollapsed) {
+    collapsedGroups.clear();
+  } else {
+    allCats.forEach(c => collapsedGroups.add(c));
+  }
+  updateToggleAllLabel();
+  buildSidebar(document.getElementById('search').value);
+  applyGroupVisibility();
+  network.redraw();
+});
+
+updateToggleAllLabel();
 
 function convexHull(points) {
   if (points.length < 3) return points.slice();

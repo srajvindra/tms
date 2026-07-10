@@ -11,8 +11,28 @@
                 <x-app-logo />
             </a>
 
+            <button
+                type="button"
+                x-data="{ allExpanded: true }"
+                x-on:click="
+                    allExpanded = !allExpanded;
+                    const want = allExpanded;
+                    document.querySelectorAll('[data-flux-navlist-group]').forEach(group => {
+                        const isOpen = group.hasAttribute('open');
+                        if (isOpen !== want) {
+                            group.querySelector('button')?.click();
+                        }
+                    });
+                "
+                class="flex w-full items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white/90 dark:hover:bg-zinc-700"
+            >
+                <flux:icon.chevron-down class="size-4" x-show="allExpanded" />
+                <flux:icon.chevron-right class="size-4" x-show="!allExpanded" x-cloak />
+                <span x-text="allExpanded ? '{{ __('Collapse all') }}' : '{{ __('Expand all') }}'"></span>
+            </button>
+
             <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
+                <flux:navlist.group expandable :heading="__('Platform')">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="list-bullet" :href="route('tasks.index')" :current="request()->routeIs('tasks.*')" wire:navigate>{{ __('Tasks') }}</flux:navlist.item>
                     <flux:navlist.item icon="document-text" :href="route('json-reader.index')" :current="request()->routeIs('json-reader.*')" wire:navigate>{{ __('JSON Reader') }}</flux:navlist.item>

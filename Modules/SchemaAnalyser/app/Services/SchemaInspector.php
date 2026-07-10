@@ -2,6 +2,7 @@
 
 namespace Modules\SchemaAnalyser\Services;
 
+use App\Helpers\Helper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -15,26 +16,26 @@ class SchemaInspector
      * and singular forms so short prefixes like `sos` and `bas` are not mangled.
      */
     private const SMART_RULES = [
-        'auth' => ['user', 'role', 'permission', 'password', 'session', 'oauth', 'token', 'otp'],
-        'system' => ['migration', 'cache', 'job', 'failed', 'batch', 'notification', 'telescope', 'pulse', 'horizon', 'monitor', 'monitored', 'health', 'log', 'workload', 'export'],
+        'auth' => ['user', 'role', 'permission', 'password', 'session', 'oauth', 'token', 'otp', 'metadata', 'otps'],
+        'system' => ['migration', 'cache', 'job', 'failed', 'batch', 'notification', 'telescope', 'pulse', 'horizon', 'monitor', 'monitored', 'health', 'log', 'workload', 'export', 'activity', 'zip'],
         'tenancy' => ['tenant', 'domain'],
-        'custom' => ['custom', 'entity', 'risk'],
-        'customer' => ['customer', 'contact', 'lead', 'company', 'client'],
-        'staff' => ['staff', 'department', 'employee'],
-        'property' => ['property', 'unit', 'amenity', 'address', 'zip', 'location', 'room', 'country', 'state'],
-        'integration' => ['qb', 'sos', 'bc', 'fba', 'bas', 'fluidpay', 'stripe', 'twilio', 'webhook', 'api'],
+        'custom fields' => ['custom', 'entity', 'risk'],
+        'staff' => ['staff', 'department', 'employee', 'assigner'],
+        'property' => ['property', 'unit', 'amenity', 'address',  'location', 'room', 'country', 'state'],
+        'integration' => ['qb', 'sos', 'bc', 'fba', 'bas', 'fluidpay', 'stripe', 'twilio', 'webhook', 'api', 'google'],
         'commerce' => ['order', 'cart', 'product', 'offer', 'item', 'inventory', 'sku', 'itemsku', 'quote', 'quotemap', 'send', 'po'],
         'logistics' => ['carrier', 'shipment', 'shiping', 'shipping', 'warehouse', 'store', 'delivery', 'rate', 'surcharge'],
         'payment' => ['payment', 'charge', 'refund', 'fee', 'tax', 'invoice', 'transaction', 'bank'],
         'membership' => ['membership', 'memership', 'subscription', 'plan'],
         'pipeline' => ['pipeline', 'stage', 'step', 'workflow', 'process', 'project'],
-        'communication' => ['template', 'message', 'email', 'sms'],
+        'communication' => ['template', 'message', 'email', 'sms', 'conversation', 'recipient', 'participant'],
         'document' => ['document', 'file', 'attachment', 'media', 'image', 'collateral', 'master'],
-        'calendar' => ['event', 'calendar', 'availability', 'schedule', 'reminder', 'timezone', 'attendance'],
+        'calendar' => ['event', 'calendar', 'availability', 'schedule', 'reminder', 'timezone', 'attendance', 'slot', 'legend'],
         'cms' => ['cms', 'page', 'post', 'article', 'tag', 'category'],
         'business' => ['business', 'organization', 'vendor', 'brand', 'setting', 'supplier'],
-        'crm' => ['activity', 'note', 'task', 'feedback'],
+        'crm' => ['note', 'task', 'feedback', 'marketing', 'source', 'customer', 'contact', 'lead', 'company', 'client'],
         'support' => ['service', 'ticket', 'hold', 'defect', 'escalation', 'exception', 'ack'],
+
     ];
 
     public function inspect(?string $connection = null, bool $smart = false): array
@@ -42,7 +43,8 @@ class SchemaInspector
         $builder = Schema::connection($connection);
         $databaseName = DB::connection($connection)->getDatabaseName();
         $tables = $builder->getTables();
-
+        // Helper::pr($databaseName);
+        // Helper::pd($tables);
         $result = [];
 
         foreach ($tables as $table) {

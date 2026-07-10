@@ -5,5 +5,7 @@
     "YouTube": true,
     "News": true,
     "Asana": true,
-    "SchemaAnalyser": true
+    "SchemaAnalyser": true,
+    "GDocs": true,
+    "DataAnalyser": true
 }

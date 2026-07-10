@@ -1,0 +1,11 @@
+{
+    "name": "DataAnalyser",
+    "alias": "dataanalyser",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DataAnalyser\\Providers\\DataAnalyserServiceProvider"
+    ],
+    "files": []
+}
