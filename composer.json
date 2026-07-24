@@ -44,7 +44,9 @@
             "Modules\\SchemaAnalyser\\": "Modules/SchemaAnalyser/app/",
             "Modules\\GDocs\\": "Modules/GDocs/app/",
             "Modules\\DataAnalyser\\": "Modules/DataAnalyser/app/",
-            "Modules\\DataAnalyser\\Database\\Seeders\\": "Modules/DataAnalyser/database/seeders/"
+            "Modules\\DataAnalyser\\Database\\Seeders\\": "Modules/DataAnalyser/database/seeders/",
+            "Modules\\WorldMap\\": "Modules/WorldMap/app/",
+            "Modules\\WorldMap\\Database\\Seeders\\": "Modules/WorldMap/database/seeders/"
         }
     },
     "autoload-dev": {

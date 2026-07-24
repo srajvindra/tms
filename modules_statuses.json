@@ -7,5 +7,6 @@
     "Asana": true,
     "SchemaAnalyser": true,
     "GDocs": true,
-    "DataAnalyser": true
+    "DataAnalyser": true,
+    "WorldMap": true
 }

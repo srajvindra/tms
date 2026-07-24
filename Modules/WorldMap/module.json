@@ -1,0 +1,11 @@
+{
+    "name": "WorldMap",
+    "alias": "worldmap",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\WorldMap\\Providers\\WorldMapServiceProvider"
+    ],
+    "files": []
+}
