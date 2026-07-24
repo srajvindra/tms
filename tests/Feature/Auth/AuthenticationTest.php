@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Auth\Login;
+use Modules\Auth\Livewire\Login;
 use App\Models\User;
 use Livewire\Livewire;
 

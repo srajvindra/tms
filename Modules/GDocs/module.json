@@ -1,0 +1,11 @@
+{
+    "name": "GDocs",
+    "alias": "gdocs",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GDocs\\Providers\\GDocsServiceProvider"
+    ],
+    "files": []
+}

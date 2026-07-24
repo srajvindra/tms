@@ -1,0 +1,11 @@
+{
+    "name": "SchemaAnalyser",
+    "alias": "schemaanalyser",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SchemaAnalyser\\Providers\\SchemaAnalyserServiceProvider"
+    ],
+    "files": []
+}

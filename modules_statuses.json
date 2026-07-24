@@ -1,5 +1,12 @@
 {
     "Tasks": true,
     "Auth": true,
-    "Settings": true
+    "Settings": true,
+    "YouTube": true,
+    "News": true,
+    "Asana": true,
+    "SchemaAnalyser": true,
+    "GDocs": true,
+    "DataAnalyser": true,
+    "WorldMap": true
 }
